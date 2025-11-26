@@ -15,9 +15,7 @@ const Homepage = () => {
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`
-        );
+        const res = await fetch(`https://nextjsecommerc.vercel.app/api/topics`);
         if (!res.ok) throw new Error("Failed to fetch topics");
         const data = await res.json();
         setTopics(data.topics || []);

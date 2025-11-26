@@ -27,14 +27,11 @@ const AddProductPage = () => {
     console.log({ title, description, category, price, image });
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`,
-        {
-          method: "POST",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify({ title, description, category, price, image }),
-        }
-      );
+      const res = await fetch(`https://nextjsecommerc.vercel.app/api/topics`, {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({ title, description, category, price, image }),
+      });
       if (res.ok) {
         Swal.fire({
           position: "top-end",
