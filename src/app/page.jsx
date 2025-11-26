@@ -1,40 +1,12 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
 import { MdEmail } from "react-icons/md";
 import { IoCall } from "react-icons/io5";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { MdOutlineWatchLater } from "react-icons/md";
-import Image from "next/image";
-import Link from "next/link";
+
 import BannerSlider from "@/Component/Banner";
+import RecentProduct from "@/Component/RecentProduct";
 
 const Homepage = () => {
-  const [topics, setTopics] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const getTopics = async () => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`,
-        { cache: "no-store" }
-      );
-
-      if (!res.ok) throw new Error("Failed to fetch topics");
-
-      const data = await res.json();
-      setTopics(data.topics || []);
-    } catch (err) {
-      console.error("Error loading topics:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getTopics();
-  }, []);
   const items = [
     { number: "10K+", label: "Happy Customers" },
     { number: "500+", label: "Products Sold" },
@@ -51,7 +23,9 @@ const Homepage = () => {
           Recent Product
         </h2>
 
-        <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 py-4">
+        <RecentProduct></RecentProduct>
+
+        {/* <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 py-4">
           {topics.slice(0, 6).map((product, id) => {
             return (
               <div
@@ -93,7 +67,7 @@ const Homepage = () => {
               </div>
             );
           })}
-        </div>
+        </div> */}
       </section>
 
       <section className="py-5">
