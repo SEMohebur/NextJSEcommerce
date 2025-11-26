@@ -10,7 +10,7 @@ import Link from "next/link";
 
 const getAllData = async () => {
   try {
-    const res = await fetch(`https://nextjsecommerc.vercel.app/api/topics`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`, {
       cache: "no-store",
     });
     if (!res.ok) {
@@ -57,7 +57,7 @@ const ManageProductPage = () => {
       if (result.isConfirmed) {
         try {
           const res = await fetch(
-            `https://nextjsecommerc.vercel.app/api/topics?id=${id}`,
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics?id=${id}`,
             {
               method: "DELETE",
             }

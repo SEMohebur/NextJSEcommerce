@@ -13,7 +13,7 @@ const ProductsDetailpage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`https://nextjsecommerc.vercel.app/api/topics/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/topics/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch");
         return res.json();
