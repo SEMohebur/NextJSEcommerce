@@ -1,35 +1,31 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const RecentProduct = () => {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const getTopics = async () => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`,
-        { cache: "no-store" }
-      );
-
-      if (!res.ok) throw new Error("Failed to fetch topics");
-
-      const data = await res.json();
-      setTopics(data.topics || []);
-    } catch (err) {
-      console.error("Error loading topics:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    getTopics();
+    const fetchTopics = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`
+        );
+        const data = await res.json();
+        setTopics(data?.topics || []);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error loading topics:", err);
+        setLoading(false);
+      }
+    };
+    fetchTopics();
   }, []);
+
   return (
     <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 py-4">
       {topics.slice(0, 6).map((product, id) => {
