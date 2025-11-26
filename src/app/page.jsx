@@ -1,27 +1,36 @@
+"use client";
 import { MdEmail } from "react-icons/md";
 import { IoCall } from "react-icons/io5";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { MdOutlineWatchLater } from "react-icons/md";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import BannerSlider from "@/Component/Banner";
+import { useEffect, useState } from "react";
 
-const getAllData = async () => {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`, {
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      throw new Error("Faild to fetch topics");
-    }
-    return res.json();
-  } catch (err) {
-    console.log("Error loading topics: ", err);
-  }
-};
+const Homepage = () => {
+  const [topics, setTopics] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-const Homepage = async () => {
-  const { topics } = await getAllData();
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`
+        );
+        if (!res.ok) throw new Error("Failed to fetch topics");
+        const data = await res.json();
+        setTopics(data.topics || []);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error loading topics: ", err);
+        setLoading(false);
+      }
+    };
+    fetchTopics();
+  }, []);
+
+  if (loading) return <p className="text-center mt-10">Loading...</p>;
 
   const items = [
     { number: "10K+", label: "Happy Customers" },
