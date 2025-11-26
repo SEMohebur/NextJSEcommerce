@@ -10,11 +10,22 @@ async function getTopics() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`, {
     cache: "no-store",
   });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch topics");
+  }
+
   return res.json();
 }
 
 const Homepage = async () => {
-  const { topics } = await getTopics();
+  let topics = [];
+  try {
+    const data = await getTopics();
+    topics = data?.topics || [];
+  } catch (err) {
+    console.error("Error loading topics:", err);
+  }
 
   const items = [
     { number: "10K+", label: "Happy Customers" },

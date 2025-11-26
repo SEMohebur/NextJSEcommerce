@@ -38,7 +38,7 @@ const ManageProductPage = () => {
   useEffect(() => {
     const fetchTopics = async () => {
       const data = await getAllData();
-      setTopics(data.topics || []);
+      setTopics(data?.topics || []);
       setDataLoading(false);
     };
     fetchTopics();
@@ -69,7 +69,7 @@ const ManageProductPage = () => {
               text: "Your file has been deleted.",
               icon: "success",
             });
-            window.location.reload();
+            setTopics((prev) => prev.filter((item) => item._id !== id));
           } else {
             Swal.fire({
               title: "Error!",
@@ -89,8 +89,11 @@ const ManageProductPage = () => {
   };
 
   //
-  if (loading || !user || dataLoading) {
+  if (loading || dataLoading) {
     return <p className="text-center mt-10 text-xl">Loading...</p>;
+  }
+  if (!user) {
+    return null;
   }
   return (
     <div className=" w-11/12 mx-auto">
