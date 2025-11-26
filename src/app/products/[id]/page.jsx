@@ -1,25 +1,35 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const getTopicById = async (id) => {
-  try {
-    const res = await fetch(`http://localhost:3000/api/topics/${id}`, {
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      throw new Error("Faild to fetch");
-    }
-    return res.json();
-  } catch (err) {
-    console.log(err);
-  }
-};
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
-const ProductsDetailpage = async ({ params }) => {
-  const { id } = await params;
-  const { topic } = await getTopicById(id);
-  // console.log(topic);
+const ProductsDetailpage = () => {
+  const params = useParams();
+  const { id } = params; //
+  const [topic, setTopic] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/topics/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch");
+        return res.json();
+      })
+      .then((data) => {
+        setTopic(data.topic);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) return <p>Loading...</p>;
+  if (!topic) return <p>Topic not found</p>;
 
   return (
     <div className="w-11/12 mx-auto py-6">
@@ -97,7 +107,7 @@ const ProductsDetailpage = async ({ params }) => {
             href="/products"
             className=" bg-indigo-500 px-10 py-2 rounded-md text-white hover:bg-indigo-400 duration-300"
           >
-            Beck
+            Back link
           </Link>
         </div>
       </div>
