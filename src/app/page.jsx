@@ -1,5 +1,3 @@
-"use client";
-import { useEffect, useState } from "react";
 import { MdEmail } from "react-icons/md";
 import { IoCall } from "react-icons/io5";
 import { FaMapMarkedAlt } from "react-icons/fa";
@@ -8,28 +6,15 @@ import Image from "next/image";
 import Link from "next/link";
 import BannerSlider from "@/Component/Banner";
 
-const Homepage = () => {
-  const [topics, setTopics] = useState([]);
-  const [loading, setLoading] = useState(true);
+async function getTopics() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`, {
+    cache: "no-store",
+  });
+  return res.json();
+}
 
-  useEffect(() => {
-    const fetchTopics = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`
-        );
-        const data = await res.json();
-        setTopics(data?.topics || []);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error loading topics: ", err);
-        setLoading(false);
-      }
-    };
-    fetchTopics();
-  }, []);
-
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
+const Homepage = async () => {
+  const { topics } = await getTopics();
 
   const items = [
     { number: "10K+", label: "Happy Customers" },
