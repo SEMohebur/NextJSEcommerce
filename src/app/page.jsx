@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { MdEmail } from "react-icons/md";
 import { IoCall } from "react-icons/io5";
 import { FaMapMarkedAlt } from "react-icons/fa";
@@ -6,7 +7,6 @@ import { MdOutlineWatchLater } from "react-icons/md";
 import Image from "next/image";
 import Link from "next/link";
 import BannerSlider from "@/Component/Banner";
-import { useEffect, useState } from "react";
 
 const Homepage = () => {
   const [topics, setTopics] = useState([]);
@@ -18,9 +18,8 @@ const Homepage = () => {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`
         );
-        if (!res.ok) throw new Error("Failed to fetch topics");
         const data = await res.json();
-        setTopics(data.topics || []);
+        setTopics(data?.topics || []);
         setLoading(false);
       } catch (err) {
         console.error("Error loading topics: ", err);
