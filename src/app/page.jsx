@@ -6,6 +6,8 @@ import { MdOutlineWatchLater } from "react-icons/md";
 import BannerSlider from "@/Component/Banner";
 import RecentProduct from "@/Component/RecentProduct";
 
+export const dynamic = "force-dynamic";
+
 const Homepage = () => {
   const items = [
     { number: "10K+", label: "Happy Customers" },

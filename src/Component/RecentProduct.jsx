@@ -4,88 +4,70 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const RecentProduct = () => {
+export default function RecentProduct() {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTopics = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`
-        );
-        if (!res.ok) throw new Error("Failed to fetch topics");
-        const data = await res.json();
+    fetch("/api/topics", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
         setTopics(data?.topics || []);
-      } catch (err) {
-        console.error("Error loading topics:", err);
-      } finally {
         setLoading(false);
-      }
-    };
-
-    fetchTopics();
+      })
+      .catch(() => {
+        setTopics([]);
+        setLoading(false);
+      });
   }, []);
 
-  if (loading) {
+  if (loading)
     return (
-      <div className="text-center py-10 text-gray-500">Loading products...</div>
+      <p classedName="text-center py-16 text-gray-500">Loading products...</p>
     );
-  }
-
-  if (topics.length === 0) {
+  if (topics.length === 0)
     return (
-      <div className="text-center py-10 text-gray-500">
+      <div className="text-center py-16 text-gray-500">
         No products available.
       </div>
     );
-  }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-4">
-      {topics.slice(0, 6).map((product) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      {topics.slice(0, 8).map((product) => (
         <div
           key={product._id}
-          className="bg-white rounded-md overflow-hidden shadow hover:shadow-2xl duration-300"
+          className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition"
         >
-          <div className="w-full h-48 relative">
+          <div className="relative h-64">
             <Image
-              src={product.image}
+              src={product.image || "https://via.placeholder.com/400x300"}
               alt={product.title}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw,
-                     (max-width: 1200px) 50vw,
-                     33vw"
-              priority={true}
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
-          <div className="p-4">
-            <h2 className="text-xl font-bold text-gray-800 mb-2">
-              {product.title}
-            </h2>
-            <p className="text-gray-600 text-sm mb-3">
-              {product.description.slice(0, 40)}...
+          <div className="p-6">
+            <h3 className="text-xl font-bold text-gray-800">{product.title}</h3>
+            <p className="text-gray-600 text-sm mt-2 line-clamp-2">
+              {product.description || "No description"}
             </p>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-500 text-sm">{product.category}</span>
-              <span className="font-semibold text-gray-700">
+            <div className="flex justify-between items-center mt-4">
+              <span className="text-sm text-gray-500">{product.category}</span>
+              <span className="text-2xl font-bold text-indigo-600">
                 ${product.price}
               </span>
             </div>
-          </div>
-          <div className="grid m-2 text-center">
             <Link
               href={`/products/${product._id}`}
-              className="bg-indigo-500 hover:bg-indigo-600 duration-300 text-white px-2 py-1 rounded"
+              className="block mt-5 text-center bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition"
             >
-              Detail
+              View Details
             </Link>
           </div>
         </div>
       ))}
     </div>
   );
-};
-
-export default RecentProduct;
+}
