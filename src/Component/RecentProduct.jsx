@@ -4,39 +4,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const RecentProduct = () => {
-  const [topics, setTopics] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchTopics = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`
-        );
-        if (!res.ok) throw new Error("Failed to fetch topics");
-        const data = await res.json();
-        setTopics(data?.topics || []);
-      } catch (err) {
-        console.error("Error loading topics:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTopics();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="text-center py-10 text-gray-500">Loading products...</div>
-    );
-  }
+const RecentProduct = ({ initialTopics = [] }) => {
+  const topics = initialTopics;
 
   if (topics.length === 0) {
     return (
-      <div className="text-center py-10 text-gray-500">
-        No products available.
+      <div className="text-center py-16 text-gray-500 text-xl">
+        No products available at the moment.
       </div>
     );
   }
@@ -45,7 +19,7 @@ const RecentProduct = () => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-4">
       {topics.slice(0, 6).map((product) => (
         <div
-          key={product._id} // <-- unique key
+          key={product._id}
           className="bg-white rounded-md overflow-hidden shadow hover:shadow-2xl duration-300"
         >
           <div className="w-full h-48 relative">

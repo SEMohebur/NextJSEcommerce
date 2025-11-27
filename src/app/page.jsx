@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import { MdEmail } from "react-icons/md";
 import { IoCall } from "react-icons/io5";
 import { FaMapMarkedAlt } from "react-icons/fa";
@@ -8,7 +6,26 @@ import { MdOutlineWatchLater } from "react-icons/md";
 import BannerSlider from "@/Component/Banner";
 import RecentProduct from "@/Component/RecentProduct";
 
-const Homepage = () => {
+const Homepage = async () => {
+  let topics = [];
+  try {
+    const res = await fetch(
+      `https://${
+        process.env.VERCEL_URL ||
+        "nextjsecommerc-git-main-moheburs-projects.vercel.app"
+      }/api/topics`,
+      {
+        cache: "no-store",
+      }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      topics = data.topics || [];
+    }
+  } catch (err) {
+    console.error("Failed to fetch topics:", err);
+  }
+
   const items = [
     { number: "10K+", label: "Happy Customers" },
     { number: "500+", label: "Products Sold" },
@@ -25,7 +42,7 @@ const Homepage = () => {
           Recent Product
         </h2>
 
-        <RecentProduct></RecentProduct>
+        <RecentProduct initialTopics={topics}></RecentProduct>
       </section>
 
       <section className="py-5">
