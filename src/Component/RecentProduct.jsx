@@ -4,13 +4,39 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const RecentProduct = ({ initialTopics = [] }) => {
-  const topics = initialTopics;
+const RecentProduct = () => {
+  const [topics, setTopics] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/topics`
+        );
+        if (!res.ok) throw new Error("Failed to fetch topics");
+        const data = await res.json();
+        setTopics(data?.topics || []);
+      } catch (err) {
+        console.error("Error loading topics:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTopics();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center py-10 text-gray-500">Loading products...</div>
+    );
+  }
 
   if (topics.length === 0) {
     return (
-      <div className="text-center py-16 text-gray-500 text-xl">
-        No products available at the moment.
+      <div className="text-center py-10 text-gray-500">
+        No products available.
       </div>
     );
   }
