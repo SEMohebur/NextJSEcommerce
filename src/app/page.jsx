@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import { MdEmail } from "react-icons/md";
 import { IoCall } from "react-icons/io5";
 import { FaMapMarkedAlt } from "react-icons/fa";
